@@ -1,0 +1,20 @@
+# Get comments by post ID
+GET http://localhost:3333/api/comment/post/6ee28734-4e16-4027-8351-f76022bba3b8 HTTP/1.1
+
+###
+
+# Create a new comment for post
+POST http://localhost:3333/api/comment/new HTTP/1.1
+Content-Type: application/json
+
+{
+  "postId": "4d2b71aa-11b4-4ad2-b2ad-98a245524f72",
+  "text": "AAAAAAAAAA"
+}
+
+###
+
+# Delete a single comment
+DELETE http://localhost:3333/api/comment/4d2b71aa-11b4-4ad2-b2ad-98a245524f72 HTTP/1.1
+
+###
