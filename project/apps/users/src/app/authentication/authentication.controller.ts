@@ -1,4 +1,4 @@
-import {Body, Controller, Get, HttpStatus, Param, Post} from '@nestjs/common';
+import {Body, Controller, Get, HttpCode, HttpStatus, Param, Post} from '@nestjs/common';
 import {AuthenticationService} from './authentication.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import {UserRdo} from './rdo/user.rdo';
@@ -27,6 +27,7 @@ export class AuthenticationController {
   @Post('register')
   public async create(@Body() dto: CreateUserDto) {
     const newUser = await this.authService.register(dto);
+    console.log(newUser);
     return fillObject(UserRdo, newUser);
   }
 
@@ -39,6 +40,7 @@ export class AuthenticationController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Login failed.',
   })
+  @HttpCode(200)
   @Post('login')
   public async login(@Body() dto: LoginUserDto) {
     const verifiedUser = await this.authService.verifyUser(dto);

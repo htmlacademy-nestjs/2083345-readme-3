@@ -1,4 +1,4 @@
-import { Expose } from 'class-transformer';
+import {Expose, Transform} from 'class-transformer';
 import {ApiProperty} from '@nestjs/swagger';
 
 export class UserRdo {
@@ -6,6 +6,7 @@ export class UserRdo {
     description: 'Unique user ID',
     example: '7aef6925-4fe5-4057-b5cc-cc7cf214df05'
   })
+  @Transform((value) => value.obj._id.toString())
   @Expose({ name: '_id' })
   public id: string;
 

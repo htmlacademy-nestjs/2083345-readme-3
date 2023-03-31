@@ -8,7 +8,7 @@ export class BlogUserEntity implements UserInterface {
   public name: string;
   public avatar: string;
   public passwordHash: string;
-  public registrationDate: string;
+  public createdAt: string;
   public postsQty: number;
   public subscribersQty: number;
 
@@ -26,7 +26,7 @@ export class BlogUserEntity implements UserInterface {
     this.avatar = blogUser.avatar;
     this.name = blogUser.name;
     this.passwordHash = blogUser.passwordHash;
-    this.registrationDate = blogUser.registrationDate;
+    this.createdAt = blogUser.createdAt;
     this.postsQty = blogUser.postsQty;
     this.subscribersQty = blogUser.subscribersQty;
   }
