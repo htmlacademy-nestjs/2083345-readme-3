@@ -1,7 +1,7 @@
 import {PostInterface, PostStatusEnum, PostTypeEnum} from '@project/shared/app-types';
 
 export abstract class BlogPostEntity implements PostInterface {
-  public _id?: string;
+  public _id?: number;
   public _authorId?: string;
   public _origAuthorId?: string;
   public creationDate: string;

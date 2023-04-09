@@ -61,7 +61,7 @@ export class BlogPostController {
   })
   @Get(':id')
   public async show(@Param('id') id: string) {
-    const post = await this.postService.getById(id);
+    const post = await this.postService.getById(Number(id));
     return fillRdoForPost(post);
   }
 
@@ -72,7 +72,7 @@ export class BlogPostController {
   })
   @Patch(':id')
   public async update(@Param('id') id: string, @Body() dto: CreatePostTextDto) {
-    const updatedPost = await this.postService.update(id, dto);
+    const updatedPost = await this.postService.update(Number(id), dto);
     return fillRdoForPost(updatedPost);
   }
 
@@ -80,8 +80,12 @@ export class BlogPostController {
     status: HttpStatus.OK,
     description: 'Post successfully deleted.',
   })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Post could not be deleted.'
+  })
   @Delete(':id')
   public async delete(@Param('id') id: string) {
-    return await this.postService.remove(id);
+    return await this.postService.remove(Number(id));
   }
 }

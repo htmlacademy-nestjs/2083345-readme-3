@@ -21,17 +21,17 @@ export class PostRdo {
     description: 'Author id',
     example: 'dfgs-235rbfgh-35efvhnds'
   })
-  @Expose()
+  @Expose({ name: '_authorId' })
   @Type(() => UserRdo)
-  public author: UserRdo;
+  public authorId: UserRdo;
 
   @ApiProperty({
     description: 'Original author id',
     example: 'dfgs-235rbfgh-35efvhnds'
   })
-  @Expose()
+  @Expose({ name: '_origAuthorId' })
   @Type(() => UserRdo)
-  public origAuthor: UserRdo;
+  public origAuthorId: UserRdo;
 
   @ApiProperty({
     description: 'Creation date',

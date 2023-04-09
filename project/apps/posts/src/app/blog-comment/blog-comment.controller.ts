@@ -36,7 +36,7 @@ export class BlogCommentController {
   })
   @Get('post/:postId')
   public async showByPostId(@Param('postId') postId: string) {
-    const comments = await this.commentService.getByPostId(postId);
+    const comments = await this.commentService.getByPostId(Number(postId));
     return fillObject(CommentRdo, comments);
   }
 
@@ -45,7 +45,7 @@ export class BlogCommentController {
     description: 'Comment successfully deleted.',
   })
   @Delete(':commentId')
-  public async remove(@Param('commentId') commentId: string) {
+  public async remove(@Param('commentId') commentId: number) {
     return await this.commentService.remove(commentId);
   }
 }

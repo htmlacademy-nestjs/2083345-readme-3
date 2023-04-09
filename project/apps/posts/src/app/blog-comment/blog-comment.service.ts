@@ -2,14 +2,14 @@ import {Injectable} from '@nestjs/common';
 import dayjs from 'dayjs';
 import {CreateCommentDto} from './dto/create-comment.dto';
 import {BlogCommentEntity} from './blog-comment.entity';
-import {BlogCommentMemoryRepository} from './blog-comment-memory.repository';
 import {BlogPostService} from '../blog-post/blog-post.service';
+import {BlogCommentRepository} from './blog-comment.repository';
 
 
 @Injectable()
 export class BlogCommentService {
   constructor(
-    private readonly blogCommentRepository: BlogCommentMemoryRepository,
+    private readonly blogCommentRepository: BlogCommentRepository,
     private readonly blogPostService: BlogPostService,
   ) {}
 
@@ -19,25 +19,26 @@ export class BlogCommentService {
     const blogComment = {
       ...dto,
       _authorId: '',
-      postedDate: dayjs().toISOString(),
     };
 
-    const commentEntity = await new BlogCommentEntity(blogComment);
+    const commentEntity = new BlogCommentEntity(blogComment);
 
     return this.blogCommentRepository
       .create(commentEntity);
   }
 
   public async remove(
-    commentId: string,
+    commentId: number,
   ) {
     return this.blogCommentRepository
-      .destroy(commentId);
+      .destroy(Number(commentId));
   }
 
-  public async getByPostId(id: string) {
-    // Not yet implemented
-    return this.blogPostService.getById(id);
+  public async getByPostId(
+    postId: number,
+  ) {
+    return this.blogCommentRepository
+      .findByPostId(postId)
   }
 
 }

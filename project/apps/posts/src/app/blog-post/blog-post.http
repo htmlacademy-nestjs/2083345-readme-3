@@ -1,10 +1,10 @@
 # Get post by ID
-GET http://localhost:3333/api/post/e7565eea-ab34-474f-ab1a-4db36aeaf037 HTTP/1.1
+GET http://localhost:3333/api/post/10 HTTP/1.1
 
 ###
 
 # Delete post by ID
-DELETE http://localhost:3333/api/post/e7565eea-ab34-474f-ab1a-4db36aeaf037 HTTP/1.1
+DELETE http://localhost:3333/api/post/10 HTTP/1.1
 
 ###
 
@@ -25,7 +25,7 @@ Content-Type: application/json
 ###
 
 # Update a text post
-PATCH http://localhost:3333/api/post/6ee28734-4e16-4027-8351-f76022bba3b8 HTTP/1.1
+PATCH http://localhost:3333/api/post/9 HTTP/1.1
 Content-Type: application/json
 
 {

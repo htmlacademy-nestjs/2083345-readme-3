@@ -1,9 +1,9 @@
 import {CommentInterface} from '@project/shared/app-types';
 
 export class BlogCommentEntity implements CommentInterface {
-  public _id: string;
-  public _authorId: string;
-  public postId: string;
+  public _id?: number;
+  public _authorId?: string;
+  public postId: number;
   public postedDate: string;
   public text: string;
 

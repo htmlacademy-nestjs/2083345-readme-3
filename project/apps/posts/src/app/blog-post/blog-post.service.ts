@@ -1,5 +1,4 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
-import {BlogPostMemoryRepository} from './blog-post-memory.repository';
 import {CreatePostTextDto} from './dto/create-post-text.dto';
 import {CreatePostImageDto} from './dto/create-post-image.dto';
 import {CreatePostVideoDto} from './dto/create-post-video.dto';
@@ -8,12 +7,13 @@ import {CreatePostQuoteDto} from './dto/create-post-quote.dto';
 import {TypeEntityAdapterObject} from './utils/type-entity-adapter.object';
 import dayjs from 'dayjs';
 import {POST_NOT_FOUND_ERROR} from './blog-post.const';
+import {BlogPostRepository} from './blog-post.repository';
 
 
 @Injectable()
 export class BlogPostService {
   constructor(
-    private readonly blogPostRepository: BlogPostMemoryRepository
+    private readonly blogPostRepository: BlogPostRepository
   ) {}
 
   public async create(
@@ -37,7 +37,7 @@ export class BlogPostService {
   }
 
   public async update(
-    postId: string,
+    postId: number,
     dto: CreatePostTextDto | CreatePostImageDto | CreatePostVideoDto | CreatePostLinkDto | CreatePostQuoteDto,
   ) {
 
@@ -50,7 +50,7 @@ export class BlogPostService {
       .update(postId, postEntity);
   }
 
-  public async getById(id: string) {
+  public async getById(id: number) {
     const post = await this.blogPostRepository.findById(id);
     if (!post) {
       throw new NotFoundException(POST_NOT_FOUND_ERROR);
@@ -59,7 +59,7 @@ export class BlogPostService {
   }
 
   public async remove(
-    postId: string,
+    postId: number,
   ) {
     return this.blogPostRepository
       .destroy(postId);

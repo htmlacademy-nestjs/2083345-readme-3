@@ -8,7 +8,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: test
-      MONGO_INITDB_DATABASE: readme-users
+      MONGO_INITDB_DATABASE: users
 
     ports:
       - 27017:27017
