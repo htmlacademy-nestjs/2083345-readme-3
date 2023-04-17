@@ -1,5 +1,7 @@
+
+
 # Get comments by post ID
-GET http://localhost:3333/api/comment/post/7 HTTP/1.1
+GET http://localhost:3333/api/comment/post/7?page=2&limit=1 HTTP/1.1
 
 ###
 
@@ -9,12 +11,12 @@ Content-Type: application/json
 
 {
   "postId": 7,
-  "text": "BBBBBBBBB"
+  "text": "GGGGGGGGGGGGGGGGGGGg"
 }
 
 ###
 
 # Delete a single comment
-DELETE http://localhost:3333/api/comment/1 HTTP/1.1
+DELETE http://localhost:3333/api/comment/3 HTTP/1.1
 
 ###

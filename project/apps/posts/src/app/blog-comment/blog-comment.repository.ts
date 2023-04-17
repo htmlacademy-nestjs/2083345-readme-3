@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { CrudRepositoryInterface } from '@project/util/util-types';
 import { PrismaService } from '../prisma/prisma.service';
 import {prismaCommentToComment} from './utils/prisma-comment-to-comment';
+import {CommentQuery} from './query/comment.query';
 
 @Injectable()
 export class BlogCommentRepository implements CrudRepositoryInterface<BlogCommentEntity, number, CommentInterface> {
@@ -39,11 +40,13 @@ export class BlogCommentRepository implements CrudRepositoryInterface<BlogCommen
     return prismaCommentToComment(comment);
   }
 
-  public async findByPostId(postId: number): Promise<CommentInterface[]> {
+  public async findByPostId(postId: number, {limit, page}: CommentQuery): Promise<CommentInterface[]> {
     const comments = await this.prisma.comment.findMany({
       where: {
         postId
-      }
+      },
+      take: limit,
+      skip: page > 0 ? limit * (page - 1) : undefined,
     });
     return comments.map((item) => {
       return prismaCommentToComment(item);

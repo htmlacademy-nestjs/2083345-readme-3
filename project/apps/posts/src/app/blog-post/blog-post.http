@@ -1,10 +1,15 @@
 # Get post by ID
-GET http://localhost:3333/api/post/10 HTTP/1.1
+GET http://localhost:3333/api/post/9 HTTP/1.1
+
+###
+
+# Get all posts
+GET http://localhost:3333/api/post HTTP/1.1
 
 ###
 
 # Delete post by ID
-DELETE http://localhost:3333/api/post/10 HTTP/1.1
+DELETE http://localhost:3333/api/post/89 HTTP/1.1
 
 ###
 
@@ -14,22 +19,24 @@ Content-Type: application/json
 
 {
   "type": "text",
-  "status": "draft",
-  "title": "TITLE",
-  "announcement": "ANNOUNCEMENT",
-  "description": "DESCRIPTION",
-  "text": "heya",
-  "tags": ["hello", "bye"]
+  "status": "posted",
+  "title": "4yuguiyhpuihphpuihphpuhpuihpu",
+  "announcement": "yuguiyhpuihphpuihphpuhpuihpuyuguiyhpuihphpuihphpuhpuihpuyuguiyhpuihphpuihphpuhpuihpu",
+  "description": "D",
+  "text": "heyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheya",
+  "tags": ["dffr", "bsdfsdgye"]
 }
+
+
 
 ###
 
 # Update a text post
-PATCH http://localhost:3333/api/post/9 HTTP/1.1
+PATCH http://localhost:3333/api/post/90 HTTP/1.1
 Content-Type: application/json
 
 {
-  "text": "heya2"
+  "text": "heyaaaaaaaaaaaddddaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 }
 
 ###
@@ -40,10 +47,22 @@ Content-Type: application/json
 
 {
   "type": "image",
-  "status": "posted",
-  "title": "TITLE",
-  "imageLink": "IMAGELINK",
-  "tags": ["hello", "bye"]
+  "title": "UUU",
+  "imageLink": "https://www.okok.com/feed/img.png",
+  "tags": ["jjjjiee", "pppppp"]
+}
+
+###
+
+# Create a new video post
+POST http://localhost:3333/api/post/new HTTP/1.1
+Content-Type: application/json
+
+{
+  "type": "video",
+  "title": "TTTTTTTTTTTTTTTTTTTTTTT",
+  "videoLink": "https://youtu.be/bbbbbbbbbbb",
+  "tags": ["p3ppppp", "gggdj", "pppppp", "gg1j", "apppppp"]
 }
 
 ###

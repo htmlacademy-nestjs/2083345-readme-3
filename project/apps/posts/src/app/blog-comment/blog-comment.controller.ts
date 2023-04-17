@@ -1,9 +1,10 @@
-import {Body, Controller, Delete, Get, HttpStatus, Param, Post} from '@nestjs/common';
+import {Body, Controller, Delete, Get, HttpStatus, Param, Post, Query} from '@nestjs/common';
 import {ApiResponse, ApiTags} from '@nestjs/swagger';
 import {CommentRdo} from './rdo/comment.rdo';
 import {CreateCommentDto} from './dto/create-comment.dto';
 import {fillObject} from '@project/util/util-core';
 import {BlogCommentService} from './blog-comment.service';
+import {CommentQuery} from './query/comment.query';
 
 
 @ApiTags('comments')
@@ -35,8 +36,13 @@ export class BlogCommentController {
     description: 'Post not found.'
   })
   @Get('post/:postId')
-  public async showByPostId(@Param('postId') postId: string) {
-    const comments = await this.commentService.getByPostId(Number(postId));
+  public async showByPostId(
+    @Param('postId')
+      postId: number,
+    @Query()
+      query: CommentQuery
+  ) {
+    const comments = await this.commentService.getByPostId(postId, query);
     return fillObject(CommentRdo, comments);
   }
 

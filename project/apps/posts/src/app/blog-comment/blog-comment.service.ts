@@ -1,16 +1,14 @@
 import {Injectable} from '@nestjs/common';
-import dayjs from 'dayjs';
 import {CreateCommentDto} from './dto/create-comment.dto';
 import {BlogCommentEntity} from './blog-comment.entity';
-import {BlogPostService} from '../blog-post/blog-post.service';
 import {BlogCommentRepository} from './blog-comment.repository';
+import {CommentQuery} from './query/comment.query';
 
 
 @Injectable()
 export class BlogCommentService {
   constructor(
     private readonly blogCommentRepository: BlogCommentRepository,
-    private readonly blogPostService: BlogPostService,
   ) {}
 
   public async create(
@@ -36,9 +34,10 @@ export class BlogCommentService {
 
   public async getByPostId(
     postId: number,
+    query: CommentQuery
   ) {
     return this.blogCommentRepository
-      .findByPostId(postId)
+      .findByPostId(postId, query)
   }
 
 }

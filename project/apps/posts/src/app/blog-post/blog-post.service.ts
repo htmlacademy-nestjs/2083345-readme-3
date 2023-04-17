@@ -1,13 +1,12 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
-import {CreatePostTextDto} from './dto/create-post-text.dto';
-import {CreatePostImageDto} from './dto/create-post-image.dto';
-import {CreatePostVideoDto} from './dto/create-post-video.dto';
-import {CreatePostLinkDto} from './dto/create-post-link.dto';
-import {CreatePostQuoteDto} from './dto/create-post-quote.dto';
 import {TypeEntityAdapterObject} from './utils/type-entity-adapter.object';
 import dayjs from 'dayjs';
 import {POST_NOT_FOUND_ERROR} from './blog-post.const';
 import {BlogPostRepository} from './blog-post.repository';
+import {PostInterface, PostStatusEnum} from '@project/shared/app-types';
+import {PostQuery} from './query/post.query';
+import {CreatePostDto} from './dto/create/create-post.dto';
+import {UpdatePostDto} from './dto/update/update-post.dto';
 
 
 @Injectable()
@@ -17,9 +16,10 @@ export class BlogPostService {
   ) {}
 
   public async create(
-    dto: CreatePostTextDto | CreatePostImageDto | CreatePostVideoDto | CreatePostLinkDto | CreatePostQuoteDto
+    dto: CreatePostDto
   ) {
     const blogPost = {
+      status: PostStatusEnum.Posted,
       ...dto,
       _authorId: '',
       _origAuthorId: '',
@@ -38,7 +38,7 @@ export class BlogPostService {
 
   public async update(
     postId: number,
-    dto: CreatePostTextDto | CreatePostImageDto | CreatePostVideoDto | CreatePostLinkDto | CreatePostQuoteDto,
+    dto: UpdatePostDto
   ) {
 
     const blogPost = await this.getById(postId);
@@ -56,6 +56,10 @@ export class BlogPostService {
       throw new NotFoundException(POST_NOT_FOUND_ERROR);
     }
     return post;
+  }
+
+  async get(query: PostQuery): Promise<PostInterface[]> {
+    return this.blogPostRepository.find(query);
   }
 
   public async remove(
