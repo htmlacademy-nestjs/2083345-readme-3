@@ -1,10 +1,10 @@
-import { CrudRepositoryInterface } from '@project/util/util-types';
-import { Injectable } from '@nestjs/common';
-import { BlogUserEntity } from './blog-user.entity';
-import { UserInterface } from '@project/shared/app-types';
-import { BlogUserModel } from './blog-user.model';
-import { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
+import {CrudRepositoryInterface} from '@project/util/util-types';
+import {Injectable} from '@nestjs/common';
+import {BlogUserEntity} from './blog-user.entity';
+import {UserInterface} from '@project/shared/app-types';
+import {BlogUserModel} from './blog-user.model';
+import {Model} from 'mongoose';
+import {InjectModel} from '@nestjs/mongoose';
 
 @Injectable()
 export class BlogUserRepository implements CrudRepositoryInterface<BlogUserEntity, string, UserInterface> {
@@ -22,11 +22,9 @@ export class BlogUserRepository implements CrudRepositoryInterface<BlogUserEntit
   }
 
   public async findById(id: string): Promise<UserInterface | null> {
-    const result = this.blogUserModel
+    return this.blogUserModel
       .findOne({'_id': id})
       .exec();
-    console.log(await result);
-    return result;
   }
 
   public async findByEmail(email: string): Promise<UserInterface | null> {

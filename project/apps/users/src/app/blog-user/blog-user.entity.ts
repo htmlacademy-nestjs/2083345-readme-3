@@ -1,6 +1,6 @@
 import { UserInterface } from '@project/shared/app-types';
 import { compare, genSalt, hash } from 'bcrypt';
-import { SALT_ROUNDS } from './blog-user.constant';
+import { SALT_ROUNDS } from './blog-user.const';
 
 export class BlogUserEntity implements UserInterface {
   public _id?: string;

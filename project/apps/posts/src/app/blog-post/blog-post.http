@@ -1,21 +1,21 @@
+### getPost
 # Get post by ID
-GET http://localhost:3333/api/post/9 HTTP/1.1
+GET http://localhost:3332/api/post/10 HTTP/1.1
 
-###
-
+### getPosts
 # Get all posts
-GET http://localhost:3333/api/post HTTP/1.1
+GET http://localhost:3332/api/post HTTP/1.1
 
-###
-
+### deletePost
 # Delete post by ID
-DELETE http://localhost:3333/api/post/89 HTTP/1.1
+DELETE http://localhost:3332/api/post/7 HTTP/1.1
+Authorization: Bearer {{jwt_token}}
 
-###
-
+### createTextPost
 # Create a new text post
-POST http://localhost:3333/api/post/new HTTP/1.1
+POST http://localhost:3332/api/post/new HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
 
 {
   "type": "text",
@@ -24,26 +24,24 @@ Content-Type: application/json
   "announcement": "yuguiyhpuihphpuihphpuhpuihpuyuguiyhpuihphpuihphpuhpuihpuyuguiyhpuihphpuihphpuhpuihpu",
   "description": "D",
   "text": "heyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheya",
-  "tags": ["dffr", "bsdfsdgye"]
+  "tags": ["AAAaaa", "aaaaaa", "BbBbBb"]
 }
 
-
-
-###
-
+### updateTextPost
 # Update a text post
-PATCH http://localhost:3333/api/post/90 HTTP/1.1
+PATCH http://localhost:3332/api/post/8 HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
 
 {
   "text": "heyaaaaaaaaaaaddddaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 }
 
-###
-
+### createImagePost
 # Create a new image post
-POST http://localhost:3333/api/post/new HTTP/1.1
+POST http://localhost:3332/api/post/new HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
 
 {
   "type": "image",
@@ -52,17 +50,25 @@ Content-Type: application/json
   "tags": ["jjjjiee", "pppppp"]
 }
 
-###
-
+### createVideoPost
 # Create a new video post
-POST http://localhost:3333/api/post/new HTTP/1.1
+POST http://localhost:3332/api/post/new HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
 
 {
   "type": "video",
-  "title": "TTTTTTTTTTTTTTTTTTTTTTT",
+  "title": "TTTTTTTTTTTTTTTTTTTTTTTTTTT",
   "videoLink": "https://youtu.be/bbbbbbbbbbb",
   "tags": ["p3ppppp", "gggdj", "pppppp", "gg1j", "apppppp"]
 }
 
-###
+### likePost
+# Like/dislike a post
+POST http://localhost:3332/api/post/14/like?action=1 HTTP/1.1
+Authorization: Bearer {{jwt_token}}
+
+### sendNewsletters
+# Send email newsletter about new posts
+POST http://localhost:3332/api/post/news HTTP/1.1
+Authorization: Bearer {{jwt_token}}

@@ -40,7 +40,10 @@ export class BlogCommentRepository implements CrudRepositoryInterface<BlogCommen
     return prismaCommentToComment(comment);
   }
 
-  public async findByPostId(postId: number, {limit, page}: CommentQuery): Promise<CommentInterface[]> {
+  public async findByPostId(
+    postId: number,
+    {limit, page}: CommentQuery
+  ): Promise<CommentInterface[]> {
     const comments = await this.prisma.comment.findMany({
       where: {
         postId

@@ -1,10 +1,24 @@
-import {Body, Controller, Delete, Get, HttpStatus, Param, Post, Query} from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpStatus,
+  Param,
+  Post,
+  Query,
+  UnauthorizedException,
+  UseGuards
+} from '@nestjs/common';
 import {ApiResponse, ApiTags} from '@nestjs/swagger';
 import {CommentRdo} from './rdo/comment.rdo';
 import {CreateCommentDto} from './dto/create-comment.dto';
 import {fillObject} from '@project/util/util-core';
 import {BlogCommentService} from './blog-comment.service';
 import {CommentQuery} from './query/comment.query';
+import {JwtAuthGuard, CurrentUser} from '@project/util/util-auth';
+import {TokenPayloadInterface} from '@project/shared/app-types';
+import {COMMENT_NOT_CREATOR} from '../blog-post/blog-post.const';
 
 
 @ApiTags('comments')
@@ -20,9 +34,13 @@ export class BlogCommentController {
     status: HttpStatus.CREATED,
     description: 'Comment successfully created.',
   })
+  @UseGuards(JwtAuthGuard)
   @Post('new')
-  public async create(@Body() dto: CreateCommentDto) {
-    const newComment = await this.commentService.create(dto);
+  public async create(
+    @CurrentUser() currentUser: TokenPayloadInterface,
+    @Body() dto: CreateCommentDto
+  ) {
+    const newComment = await this.commentService.create(dto, currentUser);
     return fillObject(CommentRdo, newComment);
   }
 
@@ -50,8 +68,16 @@ export class BlogCommentController {
     status: HttpStatus.OK,
     description: 'Comment successfully deleted.',
   })
+  @UseGuards(JwtAuthGuard)
   @Delete(':commentId')
-  public async remove(@Param('commentId') commentId: number) {
+  public async remove(
+    @CurrentUser() currentUser: TokenPayloadInterface,
+    @Param('commentId') commentId: number,
+  ) {
+    const authorId = (await this.commentService.getById(commentId))._authorId
+    if (authorId !== currentUser.sub) {
+      throw new UnauthorizedException(COMMENT_NOT_CREATOR);
+    }
     return await this.commentService.remove(commentId);
   }
 }

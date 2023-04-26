@@ -12,27 +12,26 @@ datasource db {
 }
 
 model Post {
-  postId       Int          @id @default(autoincrement()) @map("post_id")
-  authorId     String       @default("") @map("author_id")
-  origAuthorId String       @default("") @map("orig_author_id")
-  creationDate DateTime     @default(now()) @map("creation_date")
-  postedDate   DateTime     @updatedAt @map("posted_date")
-  likesQty     Int          @default(0) @map("likes_qty")
+  postId       Int        @id @default(autoincrement()) @map("post_id")
+  authorId     String     @default("") @map("author_id")
+  origAuthorId String     @default("") @map("orig_author_id")
+  creationDate DateTime   @default(now()) @map("creation_date")
+  postedDate   DateTime   @updatedAt @map("posted_date")
   comments     Comment[]
-  commentsQty  Int          @default(0) @map("comments_qty")
   type         PostType
-  status       PostStatus
-  isReposted   Boolean      @default(false) @map("is_reposted")
+  status       PostStatus @default(posted)
+  isReposted   Boolean    @default(false) @map("is_reposted")
   tags         String[]
   title        String?
   announcement String?
   text         String?
-  imageLink    String?      @map("image_link")
-  videoLink    String?      @map("video_link")
+  imageLink    String?    @map("image_link")
+  videoLink    String?    @map("video_link")
   link         String?
   description  String?
   quote        String?
-  quoteAuthor  String?      @map("quote_author")
+  quoteAuthor  String?    @map("quote_author")
+  likes        Like[]
 
   @@map("posts")
 }
@@ -46,6 +45,20 @@ model Comment {
   text       String   @default("")
 
   @@map("comments")
+}
+
+model Like {
+  post            Post     @relation(fields: [postId], references: [postId], onDelete: Cascade)
+  postId          Int      @id @unique @map("post_id")
+  likedByUsersIds String[] @map("liked_by_ids")
+
+  @@map("likes")
+}
+
+model EmailNotify {
+  postId Int @id @unique @map("post_id")
+
+  @@map("email_notifications")
 }
 
 enum PostStatus {

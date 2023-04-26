@@ -1,9 +1,13 @@
 import {IsEnum, IsIn, IsMongoId, IsNumber, IsOptional, IsString, MaxLength, MinLength} from 'class-validator';
 import { Transform } from 'class-transformer';
-import {DEFAULT_POST_COUNT_LIMIT, DEFAULT_SORT_BY, DEFAULT_SORT_DIRECTION, POST_BAD_TAGS} from '../blog-post.const';
 import {PostTypeEnum} from '@project/shared/app-types';
+import {POST_BAD_TAGS} from '../blog-post.const';
 
-export class PostQuery {
+export const DEFAULT_POST_COUNT_LIMIT = 25;
+export const DEFAULT_SORT_BY = 'creationDate';
+export const DEFAULT_SORT_DIRECTION = 'desc';
+
+export class GetPostsQuery {
   @Transform(({ value } ) => +value || DEFAULT_POST_COUNT_LIMIT)
   @IsNumber()
   @IsOptional()

@@ -9,3 +9,4 @@ export interface UserInterface {
   postsQty?: number;
   subscribersQty?: number;
 }
+

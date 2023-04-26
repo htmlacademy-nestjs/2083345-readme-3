@@ -23,7 +23,6 @@ export class CustomCreatePostValidationPipe implements PipeTransform<any> {
           break;
         case PostTypeEnum.Image:
           const postImageDto = plainToInstance(CreatePostImageDto, dto);
-          console.log(postImageDto);
           errors = errors.concat(await validate(postImageDto));
           break;
         case PostTypeEnum.Video:

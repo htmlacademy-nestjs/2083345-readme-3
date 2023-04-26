@@ -1,6 +1,8 @@
 import {IsNumber, IsOptional} from 'class-validator';
 import { Transform } from 'class-transformer';
-import {DEFAULT_POST_COUNT_LIMIT} from '../../blog-post/blog-post.const';
+
+export const DEFAULT_POST_COUNT_LIMIT = 50;
+export const DEFAULT_POST_PAGE = 1;
 
 export class CommentQuery {
   @Transform(({ value } ) => +value || DEFAULT_POST_COUNT_LIMIT)

@@ -23,7 +23,6 @@ export class CustomUpdatePostValidationPipe implements PipeTransform<any> {
           break;
         case PostTypeEnum.Image:
           const postImageDto = plainToInstance(UpdatePostImageDto, dto);
-          console.log(postImageDto);
           errors = errors.concat(await validate(postImageDto));
           break;
         case PostTypeEnum.Video:

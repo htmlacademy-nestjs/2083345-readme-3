@@ -1,4 +1,16 @@
-import {Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query} from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UnauthorizedException,
+  UseGuards
+} from '@nestjs/common';
 import {CreatePostTextDto} from './dto/create/create-post-text.dto';
 import {ApiExtraModels, ApiResponse, ApiTags} from '@nestjs/swagger';
 import {BlogPostService} from './blog-post.service';
@@ -14,10 +26,15 @@ import {CreatePostImageDto} from './dto/create/create-post-image.dto';
 import {CreatePostVideoDto} from './dto/create/create-post-video.dto';
 import {CreatePostLinkDto} from './dto/create/create-post-link.dto';
 import {CreatePostQuoteDto} from './dto/create/create-post-quote.dto';
-import {PostQuery} from './query/post.query';
+import {GetPostsQuery} from './query/get-posts.query';
 import {CustomCreatePostValidationPipe} from './validators/custom-create-post-validation.pipe';
 import {CustomUpdatePostValidationPipe} from './validators/custom-update-post-validation.pipe';
 import {UpdatePostDto} from './dto/update/update-post.dto';
+import {LikePostQuery} from './query/like-post.query';
+import {CurrentUser, JwtAuthGuard} from '@project/util/util-auth';
+import {TokenPayloadInterface} from '@project/shared/app-types';
+import {POST_NOT_CREATOR} from './blog-post.const';
+import {NotifyService} from '../notify/notify.service';
 
 @ApiTags('posts')
 @ApiExtraModels(
@@ -39,7 +56,8 @@ import {UpdatePostDto} from './dto/update/update-post.dto';
 @Controller('post')
 export class BlogPostController {
   constructor(
-    private readonly postService: BlogPostService
+    private readonly postService: BlogPostService,
+    private readonly notifyService: NotifyService,
   ) {
   }
 
@@ -48,12 +66,14 @@ export class BlogPostController {
     status: HttpStatus.CREATED,
     description: 'Post successfully created.',
   })
+  @UseGuards(JwtAuthGuard)
   @Post('new')
   public async create(
+    @CurrentUser() currentUser: TokenPayloadInterface,
     @Body(CustomCreatePostValidationPipe)
       dto: CreatePostDto,
   ) {
-    const newPost = await this.postService.create(dto);
+    const newPost = await this.postService.create(dto, currentUser);
     return fillRdoForPost(newPost);
   }
 
@@ -64,7 +84,7 @@ export class BlogPostController {
     description: 'Posts data provided.'
   })
   @Get('/')
-  async show(@Query() query: PostQuery) {
+  async show(@Query() query: GetPostsQuery) {
     const posts = await this.postService.get(query);
     return posts.map((post) => fillRdoForPost(post));
   }
@@ -89,13 +109,20 @@ export class BlogPostController {
     status: HttpStatus.CREATED,
     description: 'Post successfully updated.',
   })
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   public async update(
+    @CurrentUser() currentUser: TokenPayloadInterface,
     @Param('id')
       id: number,
     @Body(CustomUpdatePostValidationPipe)
       dto: UpdatePostDto
   ) {
+    const authorId = (await this.postService.getById(id))._authorId
+    if (authorId !== currentUser.sub) {
+      throw new UnauthorizedException(POST_NOT_CREATOR);
+    }
+
     const updatedPost = await this.postService.update(id, dto);
     return fillRdoForPost(updatedPost);
   }
@@ -108,8 +135,46 @@ export class BlogPostController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'Post could not be deleted.'
   })
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  public async delete(@Param('id') id: number) {
+  public async delete(
+    @CurrentUser() currentUser: TokenPayloadInterface,
+    @Param('id') id: number
+  ) {
+    const authorId = (await this.postService.getById(id))._authorId
+    if (authorId !== currentUser.sub) {
+      throw new UnauthorizedException(POST_NOT_CREATOR);
+    }
     return await this.postService.remove(id);
+  }
+
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Post successfully liked/disliked.',
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Post could not be liked/disliked.'
+  })
+  @UseGuards(JwtAuthGuard)
+  @Post(':id/like')
+  public async like(
+    @CurrentUser() currentUser: TokenPayloadInterface,
+    @Query() query: LikePostQuery,
+    @Param('id') id: number
+  ) {
+    return await this.postService.like(id, currentUser.sub, query);
+  }
+
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Newsletter sent.',
+  })
+  @UseGuards(JwtAuthGuard)
+  @Post('news')
+  public async news() {
+    const newsletterPosts = await this.postService.getPostNewsletterList()
+    this.postService.clearPostNewsletterList();
+    return await this.notifyService.initPostNewsletter(newsletterPosts);
   }
 }

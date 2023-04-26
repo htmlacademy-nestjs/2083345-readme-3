@@ -1,10 +1,12 @@
 import {BlogPostEntity} from './blog-post.entity';
-import {PostInterface, PostStatusEnum, PostTypeEnum} from '@project/shared/app-types';
+import {LikeInterface, PostInterface, PostStatusEnum, PostTypeEnum} from '@project/shared/app-types';
 import {Injectable} from '@nestjs/common';
 import {CrudRepositoryInterface} from '@project/util/util-types';
 import {PrismaService} from '../prisma/prisma.service';
-import {prismaPostToPost} from './utils/prisma-post-to-post';
-import {PostQuery} from './query/post.query';
+import {prismaToPost} from './utils/prisma-to-post';
+import {GetPostsQuery} from './query/get-posts.query';
+import {Like} from '@prisma/client';
+import {LikePostQueryActionEnum} from './query/like-post.query';
 
 @Injectable()
 export class BlogPostRepository implements CrudRepositoryInterface<BlogPostEntity, number, PostInterface> {
@@ -19,8 +21,11 @@ export class BlogPostRepository implements CrudRepositoryInterface<BlogPostEntit
     delete data._authorId;
     delete data._origAuthorId;
 
-    const post = await this.prisma.post.create({data});
-    return prismaPostToPost(post);
+    const prismaPost = await this.prisma.post.create({ data });
+    const prismaLike = await this.prisma.like.create({ data: {postId: prismaPost.postId, likedByUsersIds: []} })
+    await this.prisma.emailNotify.create({data: {postId: prismaPost.postId}});
+
+    return prismaToPost(prismaPost, prismaLike);
   }
 
   public async destroy(postId: number): Promise<void> {
@@ -37,10 +42,11 @@ export class BlogPostRepository implements CrudRepositoryInterface<BlogPostEntit
         postId
       }
     });
-    return prismaPostToPost(post);
+    const prismaLike = await this.getLikesForPost(postId);
+    return prismaToPost(post, prismaLike);
   }
 
-  public async find({limit, tag, type, sortBy, sortDirection, page}: PostQuery): Promise<PostInterface[]> {
+  public async find({limit, tag, type, sortBy, sortDirection, page}: GetPostsQuery): Promise<PostInterface[]> {
     const queryObject = {
       where: {
         AND: {
@@ -63,7 +69,10 @@ export class BlogPostRepository implements CrudRepositoryInterface<BlogPostEntit
     }
 
     const posts = await this.prisma.post.findMany(queryObject);
-    return posts.map((post) => prismaPostToPost(post))
+    return await Promise.all(posts.map(async (post) => {
+      const prismaLike = await this.getLikesForPost(post.postId);
+      return prismaToPost(post, prismaLike)
+    }))
   }
 
   public async update(postId: number, item: BlogPostEntity): Promise<PostInterface> {
@@ -82,6 +91,45 @@ export class BlogPostRepository implements CrudRepositoryInterface<BlogPostEntit
       },
       data: { ...data}
     });
-    return prismaPostToPost(post);
+    const prismaLike = await this.getLikesForPost(postId);
+    return prismaToPost(post, prismaLike);
+  }
+
+  public async getLikesForPost(postId: number): Promise<Like> {
+    return this.prisma.like.findFirst({
+        where: {
+          postId
+        }
+      });
+  }
+
+  public async like(postId: number, userId: string, action: LikePostQueryActionEnum): Promise<LikeInterface> {
+    let likesForPost: string[] = (await this.getLikesForPost(postId)).likedByUsersIds;
+    if (action === LikePostQueryActionEnum.Like && !likesForPost.includes(userId)) {
+      likesForPost.push(userId);
+    }
+    if (action === LikePostQueryActionEnum.Dislike && likesForPost.includes(userId)) {
+      likesForPost = likesForPost.filter((id) => id !== userId)
+    }
+    await this.prisma.like.update({
+      where: {
+        postId
+      },
+      data: {
+        likedByUsersIds: likesForPost
+      }
+    });
+    return { postId, likedBy: likesForPost };
+  }
+
+  public async getNewsletterPosts() {
+    const newsletterPostIds = (await this.prisma.emailNotify.findMany({})).map((id) => id.postId);
+    return this.prisma.post.findMany({
+      where: {postId: {in: newsletterPostIds},}
+    });
+  }
+
+  public async clearPostNewsletterList() {
+    return this.prisma.emailNotify.deleteMany({})
   }
 }

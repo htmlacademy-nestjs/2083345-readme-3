@@ -3,6 +3,7 @@ import {CreateCommentDto} from './dto/create-comment.dto';
 import {BlogCommentEntity} from './blog-comment.entity';
 import {BlogCommentRepository} from './blog-comment.repository';
 import {CommentQuery} from './query/comment.query';
+import {TokenPayloadInterface} from '@project/shared/app-types';
 
 
 @Injectable()
@@ -12,11 +13,12 @@ export class BlogCommentService {
   ) {}
 
   public async create(
-    dto: CreateCommentDto
+    dto: CreateCommentDto,
+    user: TokenPayloadInterface,
   ) {
     const blogComment = {
       ...dto,
-      _authorId: '',
+      _authorId: user.sub,
     };
 
     const commentEntity = new BlogCommentEntity(blogComment);
@@ -38,6 +40,13 @@ export class BlogCommentService {
   ) {
     return this.blogCommentRepository
       .findByPostId(postId, query)
+  }
+
+  public async getById(
+    commentId: number,
+  ) {
+    return this.blogCommentRepository
+      .findById(commentId)
   }
 
 }

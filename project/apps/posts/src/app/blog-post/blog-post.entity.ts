@@ -6,7 +6,6 @@ export abstract class BlogPostEntity implements PostInterface {
   public _origAuthorId?: string;
   public creationDate: string;
   public postedDate: string;
-  public likesQty: number;
   public commentsQty: number;
   public type: PostTypeEnum;
   public status: PostStatusEnum;
@@ -19,7 +18,6 @@ export abstract class BlogPostEntity implements PostInterface {
     this._origAuthorId = blogPost._origAuthorId
     this.creationDate = blogPost.creationDate;
     this.postedDate = blogPost.postedDate;
-    this.likesQty = blogPost.likesQty;
     this.commentsQty = blogPost.commentsQty;
     this.type = blogPost.type;
     this.status = blogPost.status;

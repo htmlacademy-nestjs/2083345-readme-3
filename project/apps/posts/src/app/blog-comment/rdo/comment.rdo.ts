@@ -4,14 +4,14 @@ import { Expose } from 'class-transformer';
 export class CommentRdo {
   @ApiProperty({
     description: 'Comment ID',
-    example: 'hgrg-ergujhi3u4-gredsvr4'
+    example: 451
   })
-  @Expose({name: '_id'})
+  @Expose({name: 'commentId'})
   public id: string;
 
   @ApiProperty({
     description: 'Commented post ID',
-    example: 'hgrg-ergujhi3u4-gredsvr4'
+    example: 678
   })
   @Expose()
   public postId: string;
@@ -20,7 +20,7 @@ export class CommentRdo {
     description: 'Author ID',
     example: 'hgrg-ergujhi3u4-gredsvr4'
   })
-  @Expose({name: '_authorId'})
+  @Expose()
   public authorId: string;
 
   @ApiProperty({
