@@ -19,7 +19,7 @@ export class FileController {
     private readonly applicationConfig: ConfigType<typeof uploaderConfig>,
   ) {}
 
-  @Post('/upload')
+  @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   public async uploadFile(@UploadedFile() file: Express.Multer.File) {
     const newFile = await this.fileService.saveFile(file);

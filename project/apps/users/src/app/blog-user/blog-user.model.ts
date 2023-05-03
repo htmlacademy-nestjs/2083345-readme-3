@@ -31,15 +31,9 @@ export class BlogUserModel extends Document implements UserInterface {
 
   @Prop({
     required: true,
-    type: Number,
+    type: Array<string>,
   })
-  public postsQty: number;
-
-  @Prop({
-    required: true,
-    type: Number,
-  })
-  public subscribersQty: number;
+  public subscribedTo: string[];
 }
 
 export const BlogUserSchema = SchemaFactory.createForClass(BlogUserModel);

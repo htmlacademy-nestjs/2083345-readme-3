@@ -7,11 +7,9 @@ Content-Type: multipart/form-data; boundary=boundary
 Content-Disposition: form-data; name="file"; filename="file.http"
 Content-Type: text/plain
 
-
-< ./file.http
 --boundary--
 
 ### getFileById
 # Get file by ID
-GET http://localhost:3333/api/files/64465f2e3b0cea3a56ef5221 HTTP/1.1
+GET http://localhost:3333/api/files/645036fe16da1fa32e05554f HTTP/1.1
 

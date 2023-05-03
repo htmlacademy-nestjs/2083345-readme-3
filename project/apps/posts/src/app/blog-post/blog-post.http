@@ -8,7 +8,7 @@ GET http://localhost:3332/api/post HTTP/1.1
 
 ### deletePost
 # Delete post by ID
-DELETE http://localhost:3332/api/post/7 HTTP/1.1
+DELETE http://localhost:3332/api/post/8 HTTP/1.1
 Authorization: Bearer {{jwt_token}}
 
 ### createTextPost
@@ -18,7 +18,7 @@ Content-Type: application/json
 Authorization: Bearer {{jwt_token}}
 
 {
-  "type": "text",
+  "type": "ext",
   "status": "posted",
   "title": "4yuguiyhpuihphpuihphpuhpuihpu",
   "announcement": "yuguiyhpuihphpuihphpuhpuihpuyuguiyhpuihphpuihphpuhpuihpuyuguiyhpuihphpuihphpuhpuihpu",
@@ -63,12 +63,26 @@ Authorization: Bearer {{jwt_token}}
   "tags": ["p3ppppp", "gggdj", "pppppp", "gg1j", "apppppp"]
 }
 
+### repost
+# Like/dislike a post
+POST http://localhost:3332/api/post/9/repost HTTP/1.1
+Authorization: Bearer {{jwt_token}}
+
 ### likePost
 # Like/dislike a post
-POST http://localhost:3332/api/post/14/like?action=1 HTTP/1.1
+POST http://localhost:3332/api/post/8/like?action=1 HTTP/1.1
 Authorization: Bearer {{jwt_token}}
 
 ### sendNewsletters
 # Send email newsletter about new posts
 POST http://localhost:3332/api/post/news HTTP/1.1
 Authorization: Bearer {{jwt_token}}
+
+### getPostsByUserIds
+# Get posts from users
+POST http://localhost:3332/api/post/by-users HTTP/1.1
+Content-Type: application/json
+
+{
+  "ids": ["6451194059bccfdfae38ef17"]
+}

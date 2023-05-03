@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {BlogUserRepository} from './blog-user.repository';
+import {SubscribeToUserQuery} from './query/subscribe-to-user.query';
 
 @Injectable()
 export class BlogUserService {
@@ -7,10 +8,23 @@ export class BlogUserService {
     private readonly blogUserRepository: BlogUserRepository,
   ) {}
 
-  public async subscribe(id: number, action: number) {
-    // WIP
+  public async getUser(userId: string) {
+    return this.blogUserRepository.findById(userId);
   }
 
+  public async getSubscribers(userId: string) {
+    return this.blogUserRepository.getSubscribersByUserId(userId)
+  }
 
-
+  public async subscribe(
+    userId: string,
+    currentUserId: string,
+    query: SubscribeToUserQuery
+  ) {
+    return this.blogUserRepository.subscribe(
+      userId,
+      currentUserId,
+      query.action
+    )
+  }
 }

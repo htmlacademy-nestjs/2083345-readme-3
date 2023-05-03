@@ -9,8 +9,7 @@ export class BlogUserEntity implements UserInterface {
   public avatar: string;
   public passwordHash: string;
   public createdAt: string;
-  public postsQty: number;
-  public subscribersQty: number;
+  public subscribedTo?: string[]
 
   constructor(blogUser: UserInterface) {
     this.fillEntity(blogUser);
@@ -27,8 +26,7 @@ export class BlogUserEntity implements UserInterface {
     this.name = blogUser.name;
     this.passwordHash = blogUser.passwordHash;
     this.createdAt = blogUser.createdAt;
-    this.postsQty = blogUser.postsQty;
-    this.subscribersQty = blogUser.subscribersQty;
+    this.subscribedTo = blogUser.subscribedTo;
   }
 
   public async setPassword(password: string): Promise<BlogUserEntity> {

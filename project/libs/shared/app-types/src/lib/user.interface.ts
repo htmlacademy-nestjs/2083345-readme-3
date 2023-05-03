@@ -6,7 +6,6 @@ export interface UserInterface {
   passwordHash?: string;
   createdAt?: string;
   updatedAt?: string;
-  postsQty?: number;
-  subscribersQty?: number;
+  subscribedTo?: string[];
 }
 

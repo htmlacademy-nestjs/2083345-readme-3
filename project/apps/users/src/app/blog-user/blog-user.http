@@ -1,5 +1,18 @@
 ### subscribeToUser
 # Subscribe to a user
 
-POST http://localhost:3000/api/user/.../subscribe HTTP/1.1
+POST http://localhost:3000/api/user/645144b228cb64e0a917f51a/subscribe?action=1 HTTP/1.1
+Authorization: Bearer {{jwt_token}}
+
+
+### getUser
+# Get user by ID
+
+GET http://localhost:3000/api/user/645144b228cb64e0a917f51a HTTP/1.1
+
+
+### getSubscribers
+# Get the list of user's subscribers
+
+GET http://localhost:3000/api/user/645144b228cb64e0a917f51a/subscribers HTTP/1.1
 Authorization: Bearer {{jwt_token}}

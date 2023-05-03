@@ -33,7 +33,7 @@ import {UpdatePostDto} from './dto/update/update-post.dto';
 import {LikePostQuery} from './query/like-post.query';
 import {CurrentUser, JwtAuthGuard} from '@project/util/util-auth';
 import {TokenPayloadInterface} from '@project/shared/app-types';
-import {POST_NOT_CREATOR} from './blog-post.const';
+import {POST_CANT_REPOST, POST_NOT_CREATOR} from './blog-post.const';
 import {NotifyService} from '../notify/notify.service';
 
 @ApiTags('posts')
@@ -75,6 +75,21 @@ export class BlogPostController {
   ) {
     const newPost = await this.postService.create(dto, currentUser);
     return fillRdoForPost(newPost);
+  }
+
+  @ApiResponse({
+    type: PostRdo,
+    isArray: true,
+    status: HttpStatus.OK,
+    description: 'Posts data provided.'
+  })
+  @Post('by-users')
+  async showByUserIds(
+    @Query() query: GetPostsQuery,
+    @Body() data: { ids: string[] }
+  ) {
+    const posts = await this.postService.getPostsFromUsers(query, data.ids);
+    return posts.map((post) => fillRdoForPost(post));
   }
 
   @ApiResponse({
@@ -168,6 +183,27 @@ export class BlogPostController {
 
   @ApiResponse({
     status: HttpStatus.OK,
+    description: 'Post successfully reposted.',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'You cannot repost your own posts.'
+  })
+  @UseGuards(JwtAuthGuard)
+  @Post(':id/repost')
+  public async repost(
+    @CurrentUser() currentUser: TokenPayloadInterface,
+    @Param('id') id: number
+  ) {
+    const origAuthorId = (await this.postService.getById(id))._origAuthorId
+    if (origAuthorId === currentUser.sub) {
+      throw new UnauthorizedException(POST_CANT_REPOST);
+    }
+    return await this.postService.repost(id, currentUser.sub);
+  }
+
+  @ApiResponse({
+    status: HttpStatus.OK,
     description: 'Newsletter sent.',
   })
   @UseGuards(JwtAuthGuard)
@@ -177,4 +213,5 @@ export class BlogPostController {
     this.postService.clearPostNewsletterList();
     return await this.notifyService.initPostNewsletter(newsletterPosts);
   }
+
 }
