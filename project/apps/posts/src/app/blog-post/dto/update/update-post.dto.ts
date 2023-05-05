@@ -17,8 +17,7 @@ export class UpdatePostDto {
     example: 'video'
   })
   @IsEnum(PostTypeEnum)
-  @IsOptional()
-  public type?: string;
+  public type: string;
 
   @ApiProperty({
     description: 'Optional post tags',

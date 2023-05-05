@@ -29,4 +29,11 @@ export class UserRdo {
   })
   @Expose()
   public avatar: string;
+
+  @ApiProperty({
+    description: 'Number of subscribers.',
+    example: 7
+  })
+  @Expose()
+  public subscribersQty: number;
 }

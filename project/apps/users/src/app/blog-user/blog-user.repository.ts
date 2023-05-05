@@ -14,8 +14,12 @@ export class BlogUserRepository implements CrudRepositoryInterface<BlogUserEntit
   }
 
   public async create(item: BlogUserEntity): Promise<UserInterface> {
-    const newBlogUser = new this.blogUserModel({...item, postsQty: 0, subscribersQty: 0});
+    const newBlogUser = new this.blogUserModel({...item});
     return newBlogUser.save();
+  }
+
+  public async modifySubscriptions(id: string): Promise<UserInterface> {
+    return this.blogUserModel.findByIdAndUpdate(id, {subscribedTo: [id.toString()]}, {new: true})
   }
 
   public async destroy(id: string): Promise<void> {
@@ -41,14 +45,12 @@ export class BlogUserRepository implements CrudRepositoryInterface<BlogUserEntit
   }
 
   public async getSubscribersByUserId(userId: string) {
-    const temp = await this.blogUserModel
+    return await this.blogUserModel
       .aggregate([
         {
-          $match: {subscribedTo: { has: { userId } }}
+          $match: {subscribedTo: {$elemMatch: {$gte: userId}}}
         }
       ]).exec();
-    console.log(temp);
-    return temp;
   }
 
   public async subscribe(
@@ -60,8 +62,9 @@ export class BlogUserRepository implements CrudRepositoryInterface<BlogUserEntit
     if (action == SubscribeToUserQueryActionEnum.Sub) {
       currentUser.subscribedTo.push(userId);
     } else {
-      currentUser.subscribedTo = currentUser.subscribedTo.filter((item) => item !== userId);
+      currentUser.subscribedTo = currentUser.subscribedTo.filter((item) => item !== userId || item === currentUserId);
     }
+    currentUser.subscribedTo = [...(new Set(currentUser.subscribedTo))]
     return (await this.update(currentUserId, new BlogUserEntity(currentUser))).subscribedTo;
   }
 }

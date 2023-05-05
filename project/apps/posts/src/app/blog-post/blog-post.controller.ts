@@ -35,6 +35,7 @@ import {CurrentUser, JwtAuthGuard} from '@project/util/util-auth';
 import {TokenPayloadInterface} from '@project/shared/app-types';
 import {POST_CANT_REPOST, POST_NOT_CREATOR} from './blog-post.const';
 import {NotifyService} from '../notify/notify.service';
+import {SearchPostsQuery} from './query/search-posts.query';
 
 @ApiTags('posts')
 @ApiExtraModels(
@@ -101,6 +102,18 @@ export class BlogPostController {
   @Get('/')
   async show(@Query() query: GetPostsQuery) {
     const posts = await this.postService.get(query);
+    return posts.map((post) => fillRdoForPost(post));
+  }
+
+  @ApiResponse({
+    type: PostRdo,
+    isArray: true,
+    status: HttpStatus.OK,
+    description: 'Posts search data provided.'
+  })
+  @Get('/search')
+  async searchByTitle(@Query() query: SearchPostsQuery) {
+    const posts = await this.postService.searchTitle(query);
     return posts.map((post) => fillRdoForPost(post));
   }
 

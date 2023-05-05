@@ -10,6 +10,7 @@ import {UpdatePostDto} from './dto/update/update-post.dto';
 import {LikePostQuery} from './query/like-post.query';
 import {CommentQuery} from '../blog-comment/query/comment.query';
 import {BlogCommentRepository} from '../blog-comment/blog-comment.repository';
+import {SearchPostsQuery} from './query/search-posts.query';
 
 
 @Injectable()
@@ -66,6 +67,14 @@ export class BlogPostService {
 
   async get(query: GetPostsQuery): Promise<PostInterface[]> {
     const posts = await this.blogPostRepository.find(query);
+    return Promise.all(posts.map(async (post) => {
+      const comments = await this.blogCommentRepository.findByPostId(post._id, new CommentQuery())
+      return {...post, commentsQty: comments.length}
+    }))
+  }
+
+  async searchTitle(query: SearchPostsQuery): Promise<PostInterface[]> {
+    const posts = await this.blogPostRepository.searchTitle(query);
     return Promise.all(posts.map(async (post) => {
       const comments = await this.blogCommentRepository.findByPostId(post._id, new CommentQuery())
       return {...post, commentsQty: comments.length}

@@ -6,4 +6,3 @@ export const POST_BAD_TAGS = 'Tags are invalid.'
 
 export const COMMENT_NOT_CREATOR = 'You are not the creator of this comment.'
 
-

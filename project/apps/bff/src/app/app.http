@@ -5,7 +5,7 @@ POST http://localhost:3500/api/users/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "keksissimo1@mail.com",
+  "email": "keksissimo2@mail.com",
   "password": "123456"
 }
 
@@ -21,7 +21,7 @@ POST http://localhost:3500/api/users/register HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "keksissimo1@mail.com",
+  "email": "keksissimo2@mail.com",
   "avatar": "avt.png",
   "name": "Keks",
   "password": "123456"
@@ -29,7 +29,7 @@ Content-Type: application/json
 
 ### getUser
 # Get user by ID
-GET http://localhost:3500/api/users/645144ba28cb64e0a917f51e HTTP/1.1
+GET http://localhost:3500/api/users/645144b228cb64e0a917f51a HTTP/1.1
 
 ### refresh
 # Get new JWT pair
@@ -39,7 +39,7 @@ Authorization: Bearer {{refresh_jwt_token}}
 ### subscribeToUser
 # Subscribe to a user
 
-POST http://localhost:3500/api/users/645144b228cb64e0a917f51a/subscribe?action=1 HTTP/1.1
+POST http://localhost:3500/api/users/6454ea41c2a5f7f8a3fc2be5/subscribe?action=1 HTTP/1.1
 Authorization: Bearer {{jwt_token}}
 
 
@@ -65,21 +65,21 @@ Authorization: Bearer {{jwt_token}}
 {
   "type": "text",
   "status": "posted",
-  "title": "4yuguiyhpuihphpuihphpuhpuihpu",
-  "announcement": "yuguiyhpuihphpuihphpuhpuihpuyuguiyhpuihphpuihphpuhpuihpuyuguiyhpuihphpuihphpuhpuihpu",
-  "description": "D",
-  "text": "heyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheyaheya",
-  "tags": ["AAAaaa", "aaaaaa", "BbBbBb"]
+  "title": "How to escape russia in 3857 easy steps!!",
+  "announcement": "How to escape russia and not get repressed in 3857 easy steps!!!!!!!!!!!!!!!!!!!!!!!!",
+  "text": "Step 1: All you need to do is............ (read at source)..................................................................................",
+  "tags": ["help"]
 }
 
 ### updateTextPost
 # Update a text post
-PATCH http://localhost:3500/api/posts/8 HTTP/1.1
+PATCH http://localhost:3500/api/posts/40 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{jwt_token}}
 
 {
-  "text": "heyaaaaaaaaaaaddddaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  "type": "text",
+  "text": "heyaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 }
 
 ### createImagePost
@@ -90,8 +90,8 @@ Authorization: Bearer {{jwt_token}}
 
 {
   "type": "image",
-  "title": "UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU",
-  "imageLink": "https://www.okok.com/feed/img.png",
+  "title": "ShrekFanficIllustration",
+  "imageLink": "https://www.helpme.com/ShrekFanficIllustration.jpg",
   "tags": ["jjjjiee", "pppppp"]
 }
 
@@ -103,9 +103,35 @@ Authorization: Bearer {{jwt_token}}
 
 {
   "type": "video",
-  "title": "TTTTTTTTTTTTTTTTTTTTTTTTTTT",
+  "title": "PRANK GONE WRONG!",
   "videoLink": "https://youtu.be/bbbbbbbbbbb",
-  "tags": ["p3ppppp", "gggdj", "pppppp", "gg1j", "apppppp"]
+  "tags": ["rippp"]
+}
+
+### createLinkPost
+# Create a new link post
+POST http://localhost:3500/api/posts/new HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+  "type": "link",
+  "link": "https://notascam.scam",
+  "description": "Lonely MILFs in your area want to have fun!",
+  "tags": []
+}
+
+### createQuotePost
+# Create a new quote post
+POST http://localhost:3500/api/posts/new HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+  "type": "quote",
+  "quote": "4real 4real on god tho!!!!!!!!!!!!!!!!!!!!!",
+  "author": "Demarcus Laurentius III",
+  "tags": ["deep", "real", "hood"]
 }
 
 ### repost
@@ -115,7 +141,7 @@ Authorization: Bearer {{jwt_token}}
 
 ### likePost
 # Like/dislike a post
-POST http://localhost:3500/api/posts/800/like?action=1 HTTP/1.1
+POST http://localhost:3500/api/posts/213/like?action=1 HTTP/1.1
 Authorization: Bearer {{jwt_token}}
 
 ### sendNewsletters
@@ -128,6 +154,9 @@ Authorization: Bearer {{jwt_token}}
 POST http://localhost:3500/api/posts/feed HTTP/1.1
 Authorization: Bearer {{jwt_token}}
 
+### searchPostsByTitle
+# Search posts by 'title' field
+GET http://localhost:3500/api/posts/search?searchRequest=wanted%20title
 
 
 

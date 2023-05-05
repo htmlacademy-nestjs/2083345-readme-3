@@ -10,6 +10,11 @@ Authorization: Bearer {{jwt_token}}
 
 GET http://localhost:3000/api/user/645144b228cb64e0a917f51a HTTP/1.1
 
+### getUsers
+# Get users by IDs
+
+POST http://localhost:3000/api/user/ids HTTP/1.1
+
 
 ### getSubscribers
 # Get the list of user's subscribers

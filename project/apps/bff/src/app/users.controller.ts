@@ -17,7 +17,7 @@ import {ApplicationServiceURL} from './app.config';
 import {AxiosExceptionFilter} from './filters/axios-exception.filter';
 import {CreateUserDto} from './dto/create-user.dto';
 import {ApiResponse} from '@nestjs/swagger';
-import {UserRdo} from '../../../users/src/app/authentication/rdo/user.rdo';
+import {UserRdo} from '../../../users/src/app/blog-user/rdo/user.rdo';
 import {LoggedUserRdo} from '../../../users/src/app/authentication/rdo/logged-user.rdo';
 import {SubscribeToUserQuery} from '../../../users/src/app/blog-user/query/subscribe-to-user.query';
 
@@ -65,29 +65,6 @@ export class UsersController {
   }
 
   @ApiResponse({
-    type: UserRdo,
-    status: HttpStatus.OK,
-    description: 'User data provided.'
-  })
-  @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: 'User not found.'
-  })
-  @Get(':id')
-  public async getUser(
-    @Req() req: Request,
-    @Param('id') id: string,
-  ) {
-    const userData = (await this.httpService.axiosRef.get(`${ApplicationServiceURL.BlogUser}/${id}`)).data;
-    const postsQty = (await this.httpService.axiosRef.post(
-      `${ApplicationServiceURL.BlogPost}/by-users`,
-      {ids: [id]})
-    ).data.length;
-    const subscribersQty = (await this.httpService.axiosRef.get(`${ApplicationServiceURL.BlogUser}/${id}/get-subscribers`)).data.length;
-    return {...userData, postsQty, subscribersQty};
-  }
-
-  @ApiResponse({
     status: HttpStatus.OK,
     description: 'Get new access/refresh tokens'
   })
@@ -118,5 +95,30 @@ export class UsersController {
       params: query,
     });
     return data;
+  }
+
+  @ApiResponse({
+    type: UserRdo,
+    status: HttpStatus.OK,
+    description: 'User data provided.'
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'User not found.'
+  })
+  @Get(':id')
+  public async getUser(
+    @Req() req: Request,
+    @Param('id') id: string,
+  ) {
+    const userData = (await this.httpService.axiosRef.get(`${ApplicationServiceURL.BlogUser}/${id}`)).data;
+    const postsQty = (await this.httpService.axiosRef.post(
+        `${ApplicationServiceURL.BlogPost}/by-users`,
+        { ids: [id] })
+    ).data.length;
+    const subscribersQty = (await this.httpService.axiosRef.get(
+      `${ApplicationServiceURL.BlogUser}/${id}/subscribers`
+    )).data.length;
+    return {...userData, postsQty, subscribersQty};
   }
 }
